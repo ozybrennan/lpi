@@ -5,14 +5,6 @@ import math
 import matplotlib.pyplot as plt
 from scipy import stats
 
-def mean(array):
-    mean_sum = 0
-    for num in array:
-        mean_sum += num
-    mean_sum = float(mean_sum)
-    final_mean = mean_sum / len(array)   
-    return final_mean
-
 wb = openpyxl.load_workbook(
     "Downloads/Living Planet Index-07-04-2016.xlsx")
 LPI_sheet = wb.active
@@ -52,3 +44,10 @@ for row in range(2, 401):
 print stats.linregress(body_sizes, slopes)
 plt.plot(body_sizes, slopes, "o")
 plt.show()
+
+def mean(array):
+    mean_sum = 0
+    for num in array:
+        mean_sum += num
+    final_mean = mean_sum / len(array)   
+    return final_mean
