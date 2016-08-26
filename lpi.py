@@ -1,7 +1,12 @@
-import openpyxl, numpy, csv
+import csv
+
+import openpyxl
+import numpy
 import matplotlib.pyplot as plt
 from scipy import stats
-wb = openpyxl.load_workbook("Downloads/Living Planet Index-07-04-2016.xlsx")
+
+wb = openpyxl.load_workbook(
+    "Downloads/Living Planet Index-07-04-2016.xlsx")
 LPI_sheet = wb.active
 body_sizes= []
 slopes = []
@@ -20,7 +25,7 @@ for row in range(2, 401):
                 abundances = []
                 while (LPI_sheet.cell(row=row, column=column).value != None):
                     year = LPI_sheet.cell(row=row, column=column).value
-                    abundance = LPI_sheet.cell(row=row, column=column+1).value
+                    abundance = LPI_sheet.cell(row=row,column=column+1).value
                     years.append(float(year))
                     abundances.append(float(abundance))
                     column = column + 2
@@ -36,8 +41,6 @@ for row in range(2, 401):
                 slope = abnormal_slope / first_item * 100
                 slopes.append(float(slope))
                 break
-        else:
-            continue 
 print stats.linregress(body_sizes, slopes)
 plt.plot(body_sizes, slopes, "o")
 plt.show()
