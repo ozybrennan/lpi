@@ -1,6 +1,6 @@
-This folder contains everything you need to replicate or expand on my analysis.
+I took a sample of the Living Planet Index and correlated the change in the species' abundance with its body size. Since there are generally more smaller animals than larger animals, this will give a sense of whether animal populations as a whole are going up or down. This folder contains everything you need to replicate or expand on my analysis. 
 
-To see the results, run Ipi.py, and it will execute on the local copies of the data.
+To see the results, run lpi.py, and it will execute on the local copies of the data.
 
 This is still a work in progress.
 
