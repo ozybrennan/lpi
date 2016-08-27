@@ -6,13 +6,13 @@ import matplotlib.pyplot as plt
 from scipy import stats
 
 wb = openpyxl.load_workbook(
-    "Downloads/Living Planet Index-07-04-2016.xlsx")
+    "Living Planet Index-07-04-2016.xlsx")
 LPI_sheet = wb.active
 body_sizes= []
 slopes = []
 for row in range(2, 401):
     species_name = LPI_sheet.cell(row=row, column=2).value
-    with open("Downloads/eol_download_2379.csv", "rb") as f:
+    with open("eol_download_2379.csv", "rb") as f:
         reader = csv.reader(f)
         for eol_row in reader:
             test_species_name = eol_row[1].decode('utf-8')
@@ -30,10 +30,8 @@ for row in range(2, 401):
                     abundances.append(float(abundance))
                     column = column + 2
                 log_abundances = []
-                average_abundance = mean(abundances)
                 for abundance in abundances:
-                    zeroless_abundance = abundance + average_abundance
-                    log_abundances.append(math.log10(zeroless_abundance))
+                    log_abundances.append(math.asinh(abundance) - math.log(2))
                 abnormal_slope, _, _, _, _ = stats.linregress(years, log_abundances)
                 first_item = log_abundances[0]
                 if first_item == 0:
@@ -43,11 +41,6 @@ for row in range(2, 401):
                 break
 print stats.linregress(body_sizes, slopes)
 plt.plot(body_sizes, slopes, "o")
+plt.xlim([0, 300000])
+plt.ylim([-100, 100])
 plt.show()
-
-def mean(array):
-    mean_sum = 0
-    for num in array:
-        mean_sum += num
-    final_mean = mean_sum / len(array)   
-    return final_mean
