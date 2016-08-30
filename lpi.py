@@ -10,13 +10,16 @@ wb = openpyxl.load_workbook(
 LPI_sheet = wb.active
 body_sizes= []
 slopes = []
+counter = 0
 for row in range(2, 401):
     species_name = LPI_sheet.cell(row=row, column=2).value
-    with open("eol_download_2379.csv", "rb") as f:
+#replace "eol_download_2416" with whatever eol file you're using 
+    with open("eol_download_2416.csv", "rb") as f:
         reader = csv.reader(f)
         for eol_row in reader:
             test_species_name = eol_row[1].decode('utf-8')
             if test_species_name == species_name:
+                counter += 1
                 body_size = eol_row[4]
                 body_size = body_size.replace(",","")
                 body_sizes.append(float(body_size))
@@ -40,7 +43,8 @@ for row in range(2, 401):
                 slopes.append(float(slope))
                 break
 print stats.linregress(body_sizes, slopes)
+print counter
 plt.plot(body_sizes, slopes, "o")
-plt.xlim([0, 300000])
-plt.ylim([-100, 100])
+plt.xlim([0, 250000])
+plt.ylim([-500, 500])
 plt.show()
