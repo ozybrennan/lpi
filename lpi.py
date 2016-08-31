@@ -13,8 +13,8 @@ slopes = []
 counter = 0
 for row in range(2, 401):
     species_name = LPI_sheet.cell(row=row, column=2).value
-#replace "eol_download_2416" with whatever eol file you're using 
-    with open("eol_download_2416.csv", "rb") as f:
+#replace "eol_download_2419.csv" with whatever eol file you're using 
+    with open("eol_download_2419.csv", "rb") as f:
         reader = csv.reader(f)
         for eol_row in reader:
             test_species_name = eol_row[1].decode('utf-8')
@@ -22,7 +22,24 @@ for row in range(2, 401):
                 counter += 1
                 body_size = eol_row[4]
                 body_size = body_size.replace(",","")
-                body_sizes.append(float(body_size))
+                body_size = float(body_size)
+                measurement_unit = eol_row[7]
+#comment this code in and the other set of ifs out if you're working with body mass
+#                if measurement_unit == "kg":
+#                    body_size = body_size * 1000
+#                elif measurement_unit == "log10 grams":
+#                    body_size = 10**body_size
+#                elif measurement_unit != "g":
+#                    break   
+                if measurement_unit == "cm":
+                    body_size = body_size * 10
+                elif measurement_unit == "m":
+                    body_size = body_size * 1000
+                elif measurement_unit == "inch":
+                    body_size = body_size * 25.4
+                elif measurement_unit != "mm":
+                    break  
+                body_sizes.append(body_size)
                 column = 3
                 years = []
                 abundances = []
@@ -42,9 +59,9 @@ for row in range(2, 401):
                 slope = abnormal_slope / first_item * 100
                 slopes.append(float(slope))
                 break
-print stats.linregress(body_sizes, slopes)
 print counter
+print stats.linregress(body_sizes, slopes)
 plt.plot(body_sizes, slopes, "o")
-plt.xlim([0, 250000])
-plt.ylim([-500, 500])
+plt.xlim([0, 35000])
+plt.ylim([-250, 250])
 plt.show()
