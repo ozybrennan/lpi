@@ -62,6 +62,6 @@ for row in range(2, 401):
 print counter
 print stats.linregress(body_sizes, slopes)
 plt.plot(body_sizes, slopes, "o")
-plt.xlim([0, 35000])
-plt.ylim([-250, 250])
+plt.xlim([0, 5000])
+plt.ylim([-700, 700])
 plt.show()
