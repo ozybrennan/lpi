@@ -1,4 +1,99 @@
+import csv
 
+import openpyxl
+import math
+from scipy import stats
 
 def mean(numbers):
     return float(sum(numbers) / max(len(numbers), 1))
+
+def adjust_weight(body_size, measurement_unit):
+    if measurement_unit == "kg":
+        return body_size * 1000
+    elif measurement_unit == "log10 grams":
+        return 10**body_size
+    elif measurement_unit != "g":
+        return False
+
+def adjust_length(body_size, measurement_unit):
+      if measurement_unit == "cm":
+          return body_size * 10
+      elif measurement_unit == "m":
+          return body_size * 1000
+      elif measurement_unit == "inch":
+          return body_size * 25.4
+      elif measurement_unit != "mm":
+          return False
+
+def tidy_size(body_size, measurement_unit, measurement_type):
+    body_size = body_size.replace(",","")
+    body_size = float(body_size)
+    if measurement_type = "weight":
+        body_size = adjust_weight(body_size, measurement_unit)
+    elif measurement_type = "length":
+        body_size = adjust_length(body_size, measurement_unit)
+    else
+        raise Exception("Invalid measurement type")
+    return body_size
+
+def years_and_abundances(LPI_sheet):
+    column = 3
+    years = []
+    abundances = []
+    while (LPI_sheet.cell(row=row, column=column).value != None):
+        year = LPI_sheet.cell(row=row, column=column).value
+        abundance = LPI_sheet.cell(row=row,column=column+1).value
+        years.append(float(year))
+        abundances.append(float(abundance))
+        column = column + 2
+    return [years, abundances]
+
+def calculate_abundance_slopes(LPI_sheet):
+    years, abundances = years_and_abundances(LPI_sheet)
+    log_abundances = []
+    for abundance in abundances:
+        log_abundances.append(math.asinh(abundance))
+    abnormal_slope, _, _, _, _ = stats.linregress(years, log_abundances)
+    abundances_mean = mean(abundances)
+    slope = abnormal_slope / abundances_mean * 100
+    return float(slope)
+
+def calculate_percent_changes(LPI_sheet):
+    years, abundances = years_and_abundances(LPI_sheet)
+    annual_percent_changes = []
+    mean_abundances = mean(abundances)
+    for num in range(1, len(abundances)-1):
+        difference = abundances[num] - abundances[num-1]
+        percent_change = difference / mean_abundances * 100
+        years_between = years[num] - years[num-1]
+        annual_percent_change = percent_change / years_between
+        annual_percent_changes.append(annual_percent_change)
+    return mean(annual_percent_changes)
+
+def process_information(eol_file, measurement_type, analysis_type):
+    wb = openpyxl.load_workbook(
+        "Living Planet Index-07-04-2016.xlsx")
+    LPI_sheet = wb.active
+    body_sizes= []
+    changes = []
+    counter = 0
+    for row in range(2, 401):
+        species_name = LPI_sheet.cell(row=row, column=2).value
+        with open(eol_file, "rb") as f:
+            reader = csv.reader(f)
+            for eol_row in reader:
+                test_species_name = eol_row[1].decode('utf-8')
+                if test_species_name == species_name
+                    counter += 1
+                    body_size = tidy_size(eol_row[4], eol_row[7], measurement_type)
+                    break if body_size == False
+                    body_sizes.append(body_size)
+                    if analysis_type == "slopes":
+                        changes.append(calculate_abundance_slopes(LPI_sheet))
+                        break
+                    elif analysis_type == "percent change":
+                        changes.append(calculate_percent_changes(LPI_sheet))
+                        break
+                    else
+                        raise Exception ("Invalid analysis type")
+    return [counter, body_sizes, changes]

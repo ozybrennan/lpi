@@ -1,12 +1,6 @@
-import csv
+import lpi
 
-import openpyxl
-import math
 import matplotlib.pyplot as plt
-from scipy import stats
-
-def mean(numbers):
-    return float(sum(numbers) / max(len(numbers), 1))
 
 wb = openpyxl.load_workbook(
     "Living Planet Index-07-04-2016.xlsx")
