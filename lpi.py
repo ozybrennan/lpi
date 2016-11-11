@@ -3,6 +3,25 @@ import csv
 import openpyxl
 import math
 from scipy import stats
+import matplotlib.pyplot as plt
+
+def create_plot(body_sizes, abundances, analysis_type, data_type):
+    body_sizes.sort()
+    if analysis_type == "big":
+        top_x = body_sizes[len(body_sizes) / 2]
+    elif analysis_type == "small":
+        top_x = body_sizes[len(body_sizes) - 1]
+    else:
+        raise Exception("invalid analysis type")
+    plt.plot(body_sizes, abundances, "o")
+    plt.xlim([0, top_x])
+    if data_type == "slopes":
+        plt.ylim([-150, 150])
+    elif data_type == "percent_change":
+        plt.ylim([-200, 200])
+    else:
+        raise Exception("invalid data type")
+    plt.show()
 
 def mean(numbers):
     return float(sum(numbers) / max(len(numbers), 1))
