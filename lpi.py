@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 def create_plot(body_sizes, abundances, analysis_type, data_type):
     body_sizes.sort()
     if analysis_type == "big":
-        top_x = body_sizes[len(body_sizes) / 2]
-    elif analysis_type == "small":
         top_x = body_sizes[len(body_sizes) - 1]
+    elif analysis_type == "small":
+        top_x = body_sizes[len(body_sizes) / 2]
     else:
         raise Exception("invalid analysis type")
     plt.plot(body_sizes, abundances, "o")
