@@ -8,4 +8,4 @@ counter = results[0]
 body_sizes = results[1]
 slopes = results[2]
 
-lpi.create_plot(body_sizes, slopes, "big", "slopes")
+lpi.create_plot(body_sizes, slopes, "small")

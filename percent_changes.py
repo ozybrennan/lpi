@@ -7,4 +7,4 @@ counter = results[0]
 body_sizes = results[1]
 average_changes = results[2]
 
-lpi.create_plot(body_sizes, average_changes, "small", "percent_change")
+lpi.create_plot(body_sizes, average_changes, "small")
