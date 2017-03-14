@@ -31,30 +31,38 @@ def find_species_size_info(file_name, species_name, size_type):
 
 for row in range(2, 401):
     species_name = LPI_sheet.cell(row=row, column=2).value
-    find_species_size_info("eol_download_2379.csv", species_name, "Mass")
-    find_species_size_info("eol_download_2416.csv", species_name, "Body Length VT")
+    #find_species_size_info("eol_download_2379.csv", species_name, "Mass")
+    #find_species_size_info("eol_download_2416.csv", species_name, "Body Length VT")
     find_species_size_info("eol_download_2419.csv", species_name, "Body Length CMO")
-    slope_abundance = lpi.calculate_abundance_slopes(LPI_sheet, row)
-    species_info[species_name]["Slope Abundance"] = slope_abundance
+    #slope_abundance = lpi.calculate_abundance_slopes(LPI_sheet, row)
+    #species_info[species_name]["Slope Abundance"] = slope_abundance
     percent_change_abundance = lpi.calculate_percent_changes(LPI_sheet, row)
     species_info[species_name]["Percent Change Abundance"] = percent_change_abundance
     print(species_name)
 
-write_wb = openpyxl.Workbook()
+write_wb = openpyxl.load_workbook("tidy_lpi_data.xlsx")
 sheet = write_wb.active
-columns = ["Slope Abundance", "Percent Change Abundance", "Mass", "Body Length VT",
-    "Body Length CMO"]
-sheet['A1'] = "Species Name"
-column_number = 2
-for column in columns:
-   sheet.cell(row=1, column=column_number).value = column
-   column_number +=1
-row_number = 2
-for species in species_info:
-    print species + "making workbook"
-    sheet.cell(row=row_number, column=1).value = species
-    for num in range(2, 6):
-        column_header = columns[num - 2]
-        sheet.cell(row=row_number, column=num).value = species_info[species][column_header]
-    row_number += 1
-write_wb.save("tidy_lpi_data.xlsx")
+for row in range(2, 400):
+    species_name = sheet.cell(row=row, column=1).value
+    sheet.cell(row=row, column=3).value = species_info[species_name]["Percent Change Abundance"]
+    sheet.cell(row=row, column=6).value = species_info[species_name]["Body Mass CMO"]
+write_wb.save("tidy_lpi_data_cleaner.xlsx")
+
+# write_wb = openpyxl.Workbook()
+# sheet = write_wb.active
+# columns = ["Slope Abundance", "Percent Change Abundance", "Mass", "Body Length VT",
+#     "Body Length CMO"]
+# sheet['A1'] = "Species Name"
+# column_number = 2
+# for column in columns:
+#    sheet.cell(row=1, column=column_number).value = column
+#    column_number +=1
+# row_number = 2
+# for species in species_info:
+#     print species + "making workbook"
+#     sheet.cell(row=row_number, column=1).value = species
+#     for num in range(2, 6):
+#         column_header = columns[num - 2]
+#         sheet.cell(row=row_number, column=num).value = species_info[species][column_header]
+#     row_number += 1
+# write_wb.save("tidy_lpi_data.xlsx")
