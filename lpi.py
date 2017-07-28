@@ -79,9 +79,7 @@ def calculate_percent_changes_deprecated(LPI_sheet, row):
     annual_percent_changes = []
     mean_abundances = mean(abundances)
     counter = 0
-    for num in range(1, len(abundances)-1):
-        print abundances[num]
-        print abundances[num-1]
+    for num in range(1, len(abundances)):
         difference = abundances[num] - abundances[num-1]
         percent_change = difference / mean_abundances * 100
         years_between = years[num] - years[num-1]
