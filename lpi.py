@@ -76,16 +76,14 @@ def calculate_abundance_slopes(LPI_sheet, row):
 
 def calculate_percent_changes_deprecated(LPI_sheet, row):
     years, abundances = years_and_abundances(LPI_sheet, row)
-    print years
-    print abundances
     annual_percent_changes = []
     mean_abundances = mean(abundances)
     counter = 0
-    for num in range(0, len(abundances)-1):
-        print num
+    for num in range(1, len(abundances)-1):
+        print abundances[num]
+        print abundances[num-1]
         difference = abundances[num] - abundances[num-1]
         percent_change = difference / mean_abundances * 100
-        print percent_change
         years_between = years[num] - years[num-1]
         annual_percent_change = percent_change / years_between
         annual_percent_changes.append(annual_percent_change)
